@@ -15,6 +15,7 @@ class CharacterEntity{
   List<String>? episodes;
   String? url;
   DateTime? created;
+  int? pageNumber;
 
   CharacterEntity({
     this.id,
@@ -30,6 +31,7 @@ class CharacterEntity{
     this.episodes,
     this.url,
     this.created,
+    this.pageNumber,
   });
 
   CharacterEntity copyWith({
@@ -46,6 +48,7 @@ class CharacterEntity{
     List<String>? episodes,
     String? url,
     DateTime? created,
+    int? pageNumber,
   }) {
     return CharacterEntity(
       id: id ?? this.id,
@@ -61,12 +64,13 @@ class CharacterEntity{
       episodes: episodes ?? this.episodes,
       url: url ?? this.url,
       created: created ?? this.created,
+      pageNumber: pageNumber ?? this.pageNumber,
     );
   }
 
   @override
   String toString() {
-    return 'CharacterEntity{id: $id, name: $name, status: $status, species: $species, type: $type, gender: $gender, origin: $origin, originEntity: $originEntity, locationEntity: $locationEntity, image: $image, episodes: $episodes, url: $url, created: $created}';
+    return 'CharacterEntity{id: $id, name: $name, status: $status, species: $species, type: $type, gender: $gender, origin: $origin, originEntity: $originEntity, locationEntity: $locationEntity, image: $image, episodes: $episodes, url: $url, created: $created, pageNumber : $pageNumber}';
   }
 
   @override
@@ -79,7 +83,7 @@ class CharacterEntity{
               originEntity == other.originEntity &&
               locationEntity == other.locationEntity && image == other.image &&
               episodes == other.episodes && url == other.url &&
-              created == other.created;
+              created == other.created && pageNumber == other.pageNumber;
 
   @override
   int get hashCode =>
@@ -96,6 +100,6 @@ class CharacterEntity{
           image,
           episodes,
           url,
-          created);
+          created, pageNumber);
 
 }
