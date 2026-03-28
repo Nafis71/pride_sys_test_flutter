@@ -24,7 +24,9 @@ class SvgPictureWidget extends StatelessWidget {
       width: width,
       height: height,
       fit: fit ?? BoxFit.contain,
-      colorFilter: ColorFilter.mode(color ?? Colors.black, .srcIn),
+      colorFilter: color == null
+          ? null
+          : ColorFilter.mode(color ?? Colors.black, .srcIn),
     );
   }
 }

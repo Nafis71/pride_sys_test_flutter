@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:pride_sys_test_flutter/common/utils/routing/app_pages.dart';
 import 'package:pride_sys_test_flutter/domain/entities/character_e.dart';
 
 import 'character_card.dart';
@@ -30,14 +32,18 @@ class HomeCharactersScrollContent extends StatelessWidget {
               crossAxisCount: 3,
               crossAxisSpacing: 6.w,
               mainAxisSpacing: 6.h,
-              childAspectRatio: 0.68,
+              childAspectRatio: 0.62,
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final character = characters[index];
                 return CharacterCard(
                   character: character,
-                  onTap: (){},
+                  onTap: (){
+                    Get.toNamed(AppPages.characterDetails, arguments: {
+                      'character': character,
+                    });
+                  },
                 );
               },
               childCount: characters.length,
