@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:pride_sys_test_flutter/common/themes/app_theme.dart';
 import 'package:pride_sys_test_flutter/common/utils/di/dependency_injection.dart';
 import 'package:pride_sys_test_flutter/common/utils/routing/app_routes.dart';
+import 'package:pride_sys_test_flutter/data/local/database/app_database.dart';
 import 'package:pride_sys_test_flutter/data/remote/controller/network_c.dart';
 
 import 'common/utils/routing/app_pages.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppDatabase().initDB();
   _injectDependencies();
   runApp(
     ScreenUtilInit(
@@ -18,7 +22,7 @@ void main() {
   );
 }
 
-void _injectDependencies(){
+void _injectDependencies() {
   NetworkController().init();
   DependencyInjection.init();
 }
@@ -33,6 +37,7 @@ class PrideSysTestApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       getPages: AppRoutes.routes,
       initialRoute: AppPages.initial,
+      theme: AppTheme.getLightTheme(),
     );
   }
 }

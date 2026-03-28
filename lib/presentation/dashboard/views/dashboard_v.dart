@@ -35,8 +35,8 @@ class _DashboardViewState extends State<DashboardView> {
 
   BottomNavigationBarItem _getNavigationBarItem(int index) {
     return BottomNavigationBarItem(
-      icon: RPadding(
-        padding: .only(top: 8.r,bottom: 3.r),
+      icon: Padding(
+        padding: EdgeInsets.only(top: 8.r, bottom: 3.r),
         child: SvgPictureWidget(
           assetPath: _dashboardVM.dashboardOutlinedIcons[index],
           width: 24.w,
@@ -47,8 +47,8 @@ class _DashboardViewState extends State<DashboardView> {
         ),
       ),
       label: _dashboardVM.dashboardItems[index],
-      activeIcon: RPadding(
-        padding: .only(top: 8.r,bottom: 3.r),
+      activeIcon: Padding(
+        padding: EdgeInsets.only(top: 8.r, bottom: 3.r),
         child: SvgPictureWidget(
           width: 24.w,
           height: 24.h,

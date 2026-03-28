@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pride_sys_test_flutter/data/local/database/app_database.dart';
 import 'package:pride_sys_test_flutter/data/remote/controller/network_c.dart';
 import 'package:pride_sys_test_flutter/data/remote/requests/api_character_request.dart';
 import 'package:pride_sys_test_flutter/domain/uc/character_uc.dart';
@@ -10,7 +11,12 @@ class DependencyInjection {
   static void init() {
     Get.lazyPut<DashboardVM>(() => DashboardVM(), fenix: true);
     Get.lazyPut<HomeVM>(
-      () => HomeVM(CharacterUseCase(ApiCharacterRequest(NetworkController()))),
+      () => HomeVM(
+        CharacterUseCase(
+          api: ApiCharacterRequest(NetworkController()),
+          database: AppDatabase(),
+        ),
+      ),
       fenix: true,
     );
   }

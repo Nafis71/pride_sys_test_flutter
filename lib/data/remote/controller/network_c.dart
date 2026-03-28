@@ -99,7 +99,11 @@ class NetworkController {
       } else if (response.statusCode == 422) {
         apiResponse = ApiResponse.error(message: response.data['message'], statusCode: response.statusCode);
         return apiResponse;
-      } else {
+      }else if (response.statusCode == 429) {
+        apiResponse = ApiResponse.error(
+            message: "You Are Being Rate Limited, error code - 429", statusCode: response.statusCode);
+        return apiResponse;
+      }else {
         apiResponse = ApiResponse.error(message: "Something went wrong", statusCode: response.statusCode);
         return apiResponse;
       }

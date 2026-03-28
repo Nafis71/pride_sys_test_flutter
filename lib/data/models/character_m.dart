@@ -13,7 +13,6 @@ class CharacterModel extends CharacterEntity {
     super.image,
     super.locationEntity,
     super.name,
-    super.origin,
     super.originEntity,
     super.pageNumber,
     super.species,
@@ -24,7 +23,9 @@ class CharacterModel extends CharacterEntity {
 
   factory CharacterModel.fromJson(Map<String, dynamic> json, int pageNumber) {
     return CharacterModel(
-      created: json['created'],
+      created: json['created'] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json['created']) ?? DateTime.now(),
       episodes: json['episode'],
       gender: json['gender'],
       id: json['id'],
@@ -36,7 +37,6 @@ class CharacterModel extends CharacterEntity {
           ? OriginModel.fromJson(jsonDecode(json['origin']))
           : OriginModel.fromJson(json['origin']),
       name: json['name'],
-      origin: json['origin'],
       pageNumber: pageNumber,
       species: json['species'],
       status: json['status'],

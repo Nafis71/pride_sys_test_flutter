@@ -1,8 +1,6 @@
 import 'package:pride_sys_test_flutter/domain/result/result.dart';
 
-class Failure<T> extends Result {
-  /// Human-readable error message describing the failure.
-  ///
+class Failure<T> extends Result<T> {
   /// Should provide clear information about what went wrong.
   final String? failureMessage;
 

@@ -12,7 +12,7 @@ class ApiCharacterRequest extends ApiCharacterRepository {
   Future<ApiResponse<dynamic>> fetchCharacters({required int page}) {
     return _networkController.request(
       url: ApiEndPoints.characterUrl,
-      method: .get,
+      method: Method.get,
       params: {'page': page},
     );
   }

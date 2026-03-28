@@ -1,6 +1,6 @@
 import 'package:pride_sys_test_flutter/domain/result/result.dart';
 
-class Success<T> extends Result {
+class Success<T> extends Result<T> {
   /// Optional data returned from the successful operation.
   ///
   /// Can be null if the operation succeeded but returned no data.
