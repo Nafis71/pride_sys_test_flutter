@@ -3,7 +3,11 @@ import 'package:pride_sys_test_flutter/domain/entities/character_page_e.dart';
 import 'package:pride_sys_test_flutter/domain/result/result.dart';
 
 abstract class CharacterRepository {
-  Future<Result<CharacterPageEntity>> getCharacters({required int page});
+  /// [nameQuery] filters via API `name` when non-empty; omit for full list.
+  Future<Result<CharacterPageEntity>> getCharacters({
+    required int page,
+    String? nameQuery,
+  });
 
   /// Cached characters for [ids] (favourite order preserved), with local edits merged.
   Future<List<CharacterEntity>> getCharactersByIds(List<int> ids);

@@ -9,11 +9,18 @@ class ApiCharacterRequest extends ApiCharacterRepository {
   ApiCharacterRequest(this._networkController);
 
   @override
-  Future<ApiResponse<dynamic>> fetchCharacters({required int page}) {
+  Future<ApiResponse<dynamic>> fetchCharacters({
+    required int page,
+    String? name,
+  }) {
+    final Map<String, dynamic> params = <String, dynamic>{'page': page};
+    if (name != null && name.isNotEmpty) {
+      params['name'] = name;
+    }
     return _networkController.request(
       url: ApiEndPoints.characterUrl,
       method: Method.get,
-      params: {'page': page},
+      params: params,
     );
   }
 }

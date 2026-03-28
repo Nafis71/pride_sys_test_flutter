@@ -14,10 +14,29 @@ class HomeVM extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isLoadingMore = false.obs;
   RxBool hasMore = true.obs;
+  /// Filters [characters] by name (case-insensitive) when non-empty after trim.
+  final RxString searchQuery = ''.obs;
   int _currentPage = 1;
   final CharacterRepository _characterRepository;
 
   HomeVM(this._characterRepository);
+
+  /// Subset of [characters] visible in the grid for the current [searchQuery].
+  List<CharacterEntity> get charactersForDisplay {
+    final String q = searchQuery.value.trim().toLowerCase();
+    final List<CharacterEntity> all = List<CharacterEntity>.from(characters);
+    if (q.isEmpty) return all;
+    return all
+        .where(
+          (CharacterEntity c) =>
+              (c.name ?? '').toLowerCase().contains(q),
+        )
+        .toList();
+  }
+
+  void applySearchQuery(String raw) {
+    searchQuery.value = raw;
+  }
 
   /// Updates one row in the in-memory list after local edits (matches SQLite cache).
   Future<void> syncCharacterFromRepository(int id) async {
@@ -60,9 +79,9 @@ class HomeVM extends GetxController {
       final List<CharacterEntity> next = characters
           .map(
             (CharacterEntity character) => character.id != null
-                ? (byId[character.id!] ?? character)
-                : character,
-          )
+            ? (byId[character.id!] ?? character)
+            : character,
+      )
           .toList();
       characters.assignAll(next);
       if (Get.isRegistered<FavouritesVM>()) {
@@ -72,7 +91,6 @@ class HomeVM extends GetxController {
       logger.e(exception, stackTrace: stackTrace);
     }
   }
-
   Future<void> loadCharacters({bool loadMore = false}) async {
     if (isLoading.value || isLoadingMore.value) return;
     if (loadMore && !hasMore.value) return;

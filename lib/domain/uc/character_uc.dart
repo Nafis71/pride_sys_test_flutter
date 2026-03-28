@@ -28,9 +28,18 @@ class CharacterUseCase implements CharacterRepository {
   static const int _apiPageSize = 20;
 
   @override
-  Future<Result<CharacterPageEntity>> getCharacters({required int page}) async {
+  Future<Result<CharacterPageEntity>> getCharacters({
+    required int page,
+    String? nameQuery,
+  }) async {
+    final String? name = switch (nameQuery) {
+      final String s when s.trim().isNotEmpty => s.trim(),
+      _ => null,
+    };
+
     try {
-      final ApiResponse response = await _api.fetchCharacters(page: page);
+      final ApiResponse response =
+          await _api.fetchCharacters(page: page, name: name);
       if (response.isSuccess && response.data is Map<String, dynamic>) {
         final map = response.data as Map<String, dynamic>;
         final rawResults = map['results'];
@@ -50,10 +59,23 @@ class CharacterUseCase implements CharacterRepository {
             )
             .toList();
         await _appDatabase.insertCharacters(characters: characters);
-        await _appDatabase.upsertPageMeta(page: page, hasMore: hasMore);
+        if (name == null) {
+          await _appDatabase.upsertPageMeta(page: page, hasMore: hasMore);
+        }
         final merged = await _mergeOverrides(characters);
         return Success<CharacterPageEntity>(
           data: CharacterPageEntity(characters: merged, hasMore: hasMore),
+        );
+      }
+
+      if (name != null && response.statusCode == 404) {
+        return Success<CharacterPageEntity>(
+          data: CharacterPageEntity(characters: [], hasMore: false),
+        );
+      }
+      if (name != null) {
+        return Failure<CharacterPageEntity>(
+          failureMessage: response.message ?? 'Search failed',
         );
       }
 
@@ -63,6 +85,12 @@ class CharacterUseCase implements CharacterRepository {
       );
     } catch (exception, stackTrace) {
       logger.e(exception, stackTrace: stackTrace);
+      if (name != null) {
+        return Failure<CharacterPageEntity>(
+          failureMessage:
+              'Search needs a network connection. Try again when online.',
+        );
+      }
       return _pageFromCache(
         page,
         fallbackMessage: 'Offline or network error — showing cached data.',
