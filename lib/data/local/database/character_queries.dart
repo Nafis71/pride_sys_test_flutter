@@ -100,13 +100,13 @@ extension CharacterQueries on AppDatabase {
       'SELECT * FROM edited_characters WHERE id IN ($placeholders)',
       ids.toList(),
     );
-    final out = <int, Map<String, Object?>>{};
+    final result = <int, Map<String, dynamic>>{};
     for (final row in rows) {
       final id = row['id'];
       if (id is int) {
-        out[id] = Map<String, Object?>.from(row);
+        result[id] = Map<String, dynamic>.from(row);
       }
     }
-    return out;
+    return result;
   }
 }
