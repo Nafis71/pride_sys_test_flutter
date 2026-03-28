@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pride_sys_test_flutter/common/colors/app_colors.dart';
 
-class FavouritesEmptyStateW extends StatelessWidget {
-  const FavouritesEmptyStateW({super.key});
+import '../../../common/colors/app_colors.dart';
+
+class HomeEmptyState extends StatelessWidget {
+  const HomeEmptyState({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +15,13 @@ class FavouritesEmptyStateW extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.favorite_border_rounded,
+              Icons.error,
               size: 64.sp,
               color: AppColors.black.withValues(alpha: 0.25),
             ),
             SizedBox(height: 16.h),
             Text(
-              'No favourites yet',
+              'No Characters found',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
@@ -29,7 +30,7 @@ class FavouritesEmptyStateW extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              'Add characters from the home grid or detail screen. They stay available offline once cached.',
+              'Please make sure that you have stable internet connection',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.black.withValues(alpha: 0.55),
