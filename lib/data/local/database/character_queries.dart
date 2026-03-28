@@ -96,9 +96,10 @@ extension CharacterQueries on AppDatabase {
     final Database? database = this.database;
     if (database == null || ids.isEmpty) return {};
     final String placeholders = List.filled(ids.length, '?').join(',');
-    final List<Map<String, dynamic>> rows = await database.rawQuery(
-      'SELECT * FROM edited_characters WHERE id IN ($placeholders)',
-      ids.toList(),
+    final List<Map<String, dynamic>> rows = await database.query(
+      'edited_characters',
+      where: 'id IN ($placeholders)',
+      whereArgs: ids.toList(),
     );
     final result = <int, Map<String, dynamic>>{};
     for (final row in rows) {
