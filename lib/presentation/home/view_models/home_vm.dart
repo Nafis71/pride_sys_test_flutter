@@ -23,13 +23,13 @@ class HomeVM extends GetxController {
 
   /// Subset of [characters] visible in the grid for the current [searchQuery].
   List<CharacterEntity> get charactersForDisplay {
-    final String q = searchQuery.value.trim().toLowerCase();
+    final String query = searchQuery.value.trim().toLowerCase();
     final List<CharacterEntity> all = List<CharacterEntity>.from(characters);
-    if (q.isEmpty) return all;
+    if (query.isEmpty) return all;
     return all
         .where(
-          (CharacterEntity c) =>
-              (c.name ?? '').toLowerCase().contains(q),
+          (CharacterEntity character) =>
+              (character.name ?? '').toLowerCase().contains(query),
         )
         .toList();
   }
@@ -46,7 +46,7 @@ class HomeVM extends GetxController {
       if (list.isEmpty) return;
       final CharacterEntity updated = list.first;
       final int index = characters.indexWhere(
-        (CharacterEntity c) => c.id == id,
+        (CharacterEntity character) => character.id == id,
       );
       if (index < 0) return;
 
