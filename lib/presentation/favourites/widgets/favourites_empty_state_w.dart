@@ -7,7 +7,6 @@ class FavouritesEmptyStateW extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -23,7 +22,7 @@ class FavouritesEmptyStateW extends StatelessWidget {
             Text(
               'No favourites yet',
               textAlign: TextAlign.center,
-              style: textTheme.titleMedium?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppColors.c1F222A,
               ),
@@ -32,7 +31,7 @@ class FavouritesEmptyStateW extends StatelessWidget {
             Text(
               'Add characters from the home grid or detail screen. They stay available offline once cached.',
               textAlign: TextAlign.center,
-              style: textTheme.bodyMedium?.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.black.withValues(alpha: 0.55),
               ),
             ),

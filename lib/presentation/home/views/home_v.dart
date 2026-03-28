@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pride_sys_test_flutter/common/helpers/post_frame.dart';
+import 'package:pride_sys_test_flutter/domain/entities/character_e.dart';
 import 'package:pride_sys_test_flutter/presentation/home/helpers/home_helper.dart';
 import 'package:pride_sys_test_flutter/presentation/home/view_models/home_vm.dart';
 import 'package:pride_sys_test_flutter/presentation/home/widgets/characters_home_header.dart';
 import 'package:pride_sys_test_flutter/presentation/home/widgets/home_character_search_field_w.dart';
 import 'package:pride_sys_test_flutter/presentation/home/widgets/home_characters_scroll_content.dart';
+import 'package:pride_sys_test_flutter/presentation/home/widgets/home_empty_state_w.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -60,12 +62,12 @@ class _HomeViewState extends State<HomeView> {
       body: SafeArea(
         bottom: false,
         child: Obx(() {
-          final firstLoading =
+          final bool firstLoading =
               _homeVM.isLoading.value && _homeVM.characters.isEmpty;
-          final loadingMore = _homeVM.isLoadingMore.value;
-          final searchTrimmed = _homeVM.searchQuery.value.trim();
-          final gridCharacters = _homeVM.charactersForDisplay;
-          final noSearchResults =
+          final bool loadingMore = _homeVM.isLoadingMore.value;
+          final String searchTrimmed = _homeVM.searchQuery.value.trim();
+          final List<CharacterEntity> gridCharacters = _homeVM.charactersForDisplay;
+          final bool noSearchResults =
               searchTrimmed.isNotEmpty && !firstLoading && gridCharacters.isEmpty;
 
           return Column(
@@ -92,11 +94,11 @@ class _HomeViewState extends State<HomeView> {
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           )
-                        : HomeCharactersScrollContent(
+                        : gridCharacters.isNotEmpty ? HomeCharactersScrollContent(
                             characters: gridCharacters,
                             scrollController: _scrollController,
                             showPaginationLoading: loadingMore,
-                          ),
+                          ) : HomeEmptyState(),
               ),
             ],
           );
