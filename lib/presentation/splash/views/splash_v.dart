@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pride_sys_test_flutter/common/assets/svgs/png_asset.dart';
 import 'package:pride_sys_test_flutter/common/helpers/post_frame.dart';
 import 'package:pride_sys_test_flutter/common/utils/routing/app_pages.dart';
 
@@ -30,6 +31,10 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: Image.asset(PngAsset.logo),
+      ),
+    );
   }
 }

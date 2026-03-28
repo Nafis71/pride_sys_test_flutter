@@ -7,6 +7,7 @@ import 'package:pride_sys_test_flutter/domain/result/failure.dart';
 import 'package:pride_sys_test_flutter/domain/result/result.dart';
 import 'package:pride_sys_test_flutter/domain/result/success.dart';
 import 'package:pride_sys_test_flutter/presentation/common/common_toast.dart';
+import 'package:pride_sys_test_flutter/presentation/favourites/view_models/favourites_vm.dart';
 
 class HomeVM extends GetxController {
   RxList<CharacterEntity> characters = RxList();
@@ -17,6 +18,60 @@ class HomeVM extends GetxController {
   final CharacterRepository _characterRepository;
 
   HomeVM(this._characterRepository);
+
+  /// Updates one row in the in-memory list after local edits (matches SQLite cache).
+  Future<void> syncCharacterFromRepository(int id) async {
+    try {
+      final List<CharacterEntity> list = await _characterRepository
+          .getCharactersByIds([id]);
+      if (list.isEmpty) return;
+      final CharacterEntity updated = list.first;
+      final int index = characters.indexWhere(
+        (CharacterEntity c) => c.id == id,
+      );
+      if (index < 0) return;
+
+      final List<CharacterEntity> next = List<CharacterEntity>.from(characters);
+      next[index] = updated;
+      characters.assignAll(next);
+    } catch (exception, stackTrace) {
+      logger.e(exception, stackTrace: stackTrace);
+    }
+  }
+
+  /// Clears every row in [edited_characters] and refreshes the current grid + favourites list.
+  Future<void> restoreAllLocalEdits() async {
+    try {
+      await _characterRepository.clearAllLocalCharacterEdits();
+      final List<int> ids = characters
+          .map((CharacterEntity character) => character.id)
+          .whereType<int>()
+          .toList();
+      if (ids.isEmpty && Get.isRegistered<FavouritesVM>()) {
+        await Get.find<FavouritesVM>().loadFavourites();
+        return;
+      }
+      final List<CharacterEntity> refreshed = await _characterRepository
+          .getCharactersByIds(ids);
+      final Map<int, CharacterEntity> byId = <int, CharacterEntity>{
+        for (final CharacterEntity character in refreshed)
+          if (character.id != null) character.id!: character,
+      };
+      final List<CharacterEntity> next = characters
+          .map(
+            (CharacterEntity character) => character.id != null
+                ? (byId[character.id!] ?? character)
+                : character,
+          )
+          .toList();
+      characters.assignAll(next);
+      if (Get.isRegistered<FavouritesVM>()) {
+        await Get.find<FavouritesVM>().loadFavourites();
+      }
+    } catch (exception, stackTrace) {
+      logger.e(exception, stackTrace: stackTrace);
+    }
+  }
 
   Future<void> loadCharacters({bool loadMore = false}) async {
     if (isLoading.value || isLoadingMore.value) return;
@@ -31,8 +86,8 @@ class HomeVM extends GetxController {
         characters.clear();
         hasMore.value = true;
       }
-      final Result<CharacterPageEntity> result =
-          await _characterRepository.getCharacters(page: _currentPage);
+      final Result<CharacterPageEntity> result = await _characterRepository
+          .getCharacters(page: _currentPage);
       switch (result) {
         case Failure<CharacterPageEntity>(:final failureMessage):
           CommonToast.show(

@@ -4,10 +4,14 @@ import 'package:sqflite/sqflite.dart';
 class AppDatabase {
   static AppDatabase? _instance;
   static Database? _database;
+  final String characterTable = "characters";
+  final String favouriteTable = "favorites";
+  final String editedCharacterTable = "edited_characters";
+  final String characterPageMetadata = "character_page_meta";
 
   AppDatabase._internal();
 
-  factory AppDatabase()=> _instance ??= AppDatabase._internal();
+  factory AppDatabase() => _instance ??= AppDatabase._internal();
 
   Database? get database => _database;
 
@@ -35,7 +39,7 @@ class AppDatabase {
 
   Future<void> _createCharacterTables(Database db) async {
     await db.execute('''
-      CREATE TABLE characters (
+      CREATE TABLE $characterTable (
         id INTEGER PRIMARY KEY,
         name TEXT,
         status TEXT,
@@ -45,17 +49,18 @@ class AppDatabase {
         origin TEXT,
         location TEXT,
         image TEXT,
-        page INTEGER
+        page INTEGER,
+        episode TEXT
       )
     ''');
     await db.execute('''
-      CREATE TABLE favorites (
+      CREATE TABLE $favouriteTable (
         id INTEGER PRIMARY KEY
       )
     ''');
 
     await db.execute('''
-      CREATE TABLE edited_characters (
+      CREATE TABLE $editedCharacterTable (
         id INTEGER PRIMARY KEY,
         name TEXT,
         status TEXT,
@@ -72,7 +77,7 @@ class AppDatabase {
   /// Stores API [info.next] per page so pagination works offline.
   Future<void> _createPageMetaTable(Database db) async {
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS character_page_meta (
+      CREATE TABLE IF NOT EXISTS $characterPageMetadata (
         page INTEGER PRIMARY KEY,
         has_more INTEGER NOT NULL
       )

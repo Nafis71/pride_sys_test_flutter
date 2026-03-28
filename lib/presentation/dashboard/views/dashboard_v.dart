@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pride_sys_test_flutter/presentation/dashboard/view_models/dashboard_vm.dart';
+import 'package:pride_sys_test_flutter/presentation/favourites/view_models/favourites_vm.dart';
 
 import '../../common/svg_picture_w.dart';
 
@@ -24,6 +25,9 @@ class _DashboardViewState extends State<DashboardView> {
           useLegacyColorScheme: false,
           onTap: (index) {
             _dashboardVM.currentIndex.value = index;
+            if (index == 1 && Get.isRegistered<FavouritesVM>()) {
+              Get.find<FavouritesVM>().loadFavourites();
+            }
           },
           items: List.generate(_dashboardVM.screens.length, (index) {
             return _getNavigationBarItem(index);

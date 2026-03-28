@@ -26,7 +26,9 @@ class CharacterModel extends CharacterEntity {
       created: json['created'] == null
           ? DateTime.now()
           : DateTime.tryParse(json['created']) ?? DateTime.now(),
-      episodes: json['episode'],
+      episodes: json['episode'] is String
+          ? jsonDecode(json['episode'])
+          : json['episode'],
       gender: json['gender'],
       id: json['id'],
       image: json['image'],

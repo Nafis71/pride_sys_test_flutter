@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pride_sys_test_flutter/common/colors/app_colors.dart';
 
 class CharactersHomeHeader extends StatelessWidget {
-  const CharactersHomeHeader({super.key, this.onInfoTap});
-
-  final VoidCallback? onInfoTap;
+  const CharactersHomeHeader({
+    super.key,
+    this.onRestoreTap,
+  });
+  final VoidCallback? onRestoreTap;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +26,14 @@ class CharactersHomeHeader extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               color: AppColors.black.withValues(alpha: 0.04),
-              shape: .circle,
+              shape: BoxShape.circle,
             ),
             clipBehavior: Clip.antiAlias,
             child: IconButton(
-              onPressed: onInfoTap,
+              onPressed: onRestoreTap,
+              tooltip: 'Restore API data for all characters',
               icon: Icon(
-                Icons.info_outline,
+                Icons.restore_rounded,
                 color: AppColors.black.withValues(alpha: 0.9),
                 size: 26.r,
               ),

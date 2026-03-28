@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pride_sys_test_flutter/common/helpers/post_frame.dart';
+import 'package:pride_sys_test_flutter/domain/entities/character_e.dart';
+import 'package:pride_sys_test_flutter/presentation/home/helpers/home_helper.dart';
 import 'package:pride_sys_test_flutter/presentation/home/view_models/home_vm.dart';
 import 'package:pride_sys_test_flutter/presentation/home/widgets/characters_home_header.dart';
 import 'package:pride_sys_test_flutter/presentation/home/widgets/home_characters_scroll_content.dart';
@@ -16,7 +18,6 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final HomeVM _homeVM = Get.find<HomeVM>();
   final ScrollController _scrollController = ScrollController();
-
 
   @override
   void initState() {
@@ -46,49 +47,27 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  void _showInfoDialog() {
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF2C2C2C),
-        title: const Text(
-          'Characters',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
-        content: Text(
-          'Data from the Rick and Morty API. Scroll to load more characters.',
-          style: TextStyle(color: Colors.white.withValues(alpha: 0.85)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         bottom: false,
         child: Obx(() {
-          final firstLoading =
-              _homeVM.isLoading.value && _homeVM.characters.isEmpty;
+          final firstLoading = _homeVM.isLoading.value && _homeVM.characters.isEmpty;
           final loadingMore = _homeVM.isLoadingMore.value;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              CharactersHomeHeader(onInfoTap: _showInfoDialog),
+              CharactersHomeHeader(
+                onRestoreTap: (){
+                  HomeHelper.showRestoreAllDialog(context: context);
+                },
+              ),
               Expanded(
-                child:
-                firstLoading ? const Center(
-                        child: CupertinoActivityIndicator(
-                          color: Colors.grey,
-                        ),
+                child: firstLoading
+                    ? const Center(
+                        child: CupertinoActivityIndicator(color: Colors.grey),
                       )
                     : HomeCharactersScrollContent(
                         characters: _homeVM.characters,

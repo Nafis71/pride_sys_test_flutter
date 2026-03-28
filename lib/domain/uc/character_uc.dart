@@ -4,6 +4,7 @@ import 'package:pride_sys_test_flutter/data/local/database/character_queries.dar
 import 'package:pride_sys_test_flutter/data/models/character_m.dart';
 import 'package:pride_sys_test_flutter/data/remote/repositories/api_character_repo.dart';
 import 'package:pride_sys_test_flutter/data/remote/response/api_response.dart';
+import 'package:pride_sys_test_flutter/domain/entities/character_e.dart';
 import 'package:pride_sys_test_flutter/domain/entities/character_page_e.dart';
 import 'package:pride_sys_test_flutter/domain/repositories/character_repo.dart';
 import 'package:pride_sys_test_flutter/domain/result/failure.dart';
@@ -69,6 +70,48 @@ class CharacterUseCase implements CharacterRepository {
     }
   }
 
+  @override
+  Future<List<CharacterEntity>> getCharactersByIds(List<int> ids) async {
+    try {
+      if (ids.isEmpty) return [];
+      final List<CharacterModel> cached =
+          await _appDatabase.getCharactersByIds(ids);
+      return _mergeOverrides(cached);
+    } catch (exception, stackTrace) {
+      logger.e(exception, stackTrace: stackTrace);
+    }
+    return [];
+  }
+
+  @override
+  Future<void> saveLocalCharacterEdits({
+    required int characterId,
+    required String name,
+    required String status,
+    required String species,
+    required String type,
+    required String gender,
+    required String originName,
+    required String locationName,
+  }) async {
+    await _appDatabase.initDB();
+    await _appDatabase.upsertEditedCharacter(
+      id: characterId,
+      name: name,
+      status: status,
+      species: species,
+      type: type,
+      gender: gender,
+      originName: originName,
+      locationName: locationName,
+    );
+  }
+
+  @override
+  Future<void> clearAllLocalCharacterEdits() async {
+    await _appDatabase.deleteAllEditedCharacters();
+  }
+
   Future<Result<CharacterPageEntity>> _pageFromCache(
     int page, {
     required String fallbackMessage,
@@ -104,29 +147,36 @@ class CharacterUseCase implements CharacterRepository {
   CharacterModel _applyOverride(CharacterModel base, Map<String, dynamic> row) {
     return CharacterModel(
       id: base.id,
-      name: _pick('name', row) ?? base.name,
-      status: _pick('status', row) ?? base.status,
-      species: _pick('species', row) ?? base.species,
-      type: _pick('type', row) ?? base.type,
-      gender: _pick('gender', row) ?? base.gender,
+      name: _editedText('name', row, base.name),
+      status: _editedText('status', row, base.status),
+      species: _editedText('species', row, base.species),
+      type: _editedText('type', row, base.type),
+      gender: _editedText('gender', row, base.gender),
       image: base.image,
       url: base.url,
       created: base.created,
       episodes: base.episodes,
       pageNumber: base.pageNumber,
       originEntity: OriginModel(
-        name: _pick('origin', row) ?? base.originEntity?.name,
+        name: _editedText('origin', row, base.originEntity?.name),
         url: base.originEntity?.url,
       ),
       locationEntity: LocationModel(
-        name: _pick('location', row) ?? base.locationEntity?.name,
+        name: _editedText('location', row, base.locationEntity?.name),
         url: base.locationEntity?.url,
       ),
     );
   }
 
-  String? _pick(String column, Map<String, dynamic> row) {
-    final String? value = row[column];
-    return value;
+  /// SQL NULL or missing key → use [base]. Empty string is kept (no API fallback).
+  String? _editedText(
+    String column,
+    Map<String, dynamic> row,
+    String? base,
+  ) {
+    if (!row.containsKey(column)) return base;
+    final dynamic value = row[column];
+    if (value == null) return base;
+    return value.toString();
   }
 }
