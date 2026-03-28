@@ -5,7 +5,6 @@ import 'package:pride_sys_test_flutter/domain/entities/character_e.dart';
 import 'character_card.dart';
 import 'character_grid_loading_footer.dart';
 
-/// Scrollable 3-column grid + optional pagination footer sliver.
 class HomeCharactersScrollContent extends StatelessWidget {
   const HomeCharactersScrollContent({
     super.key,

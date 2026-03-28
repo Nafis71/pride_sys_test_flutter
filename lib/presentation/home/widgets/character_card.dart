@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pride_sys_test_flutter/common/colors/app_colors.dart';
 import 'package:pride_sys_test_flutter/domain/entities/character_e.dart';
 
-/// Single cell: square image + name + status (matches dark grid card look).
+
 class CharacterCard extends StatelessWidget {
   const CharacterCard({super.key, required this.character, this.onTap});
 

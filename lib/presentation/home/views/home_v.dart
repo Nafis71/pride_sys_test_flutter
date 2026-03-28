@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pride_sys_test_flutter/common/helpers/post_frame.dart';
@@ -16,7 +17,6 @@ class _HomeViewState extends State<HomeView> {
   final HomeVM _homeVM = Get.find<HomeVM>();
   final ScrollController _scrollController = ScrollController();
 
-  static const Color _scaffoldBg = Color(0xFF121212);
 
   @override
   void initState() {
@@ -72,11 +72,10 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _scaffoldBg,
       body: SafeArea(
         bottom: false,
         child: Obx(() {
-          final loadingFirst =
+          final firstLoading =
               _homeVM.isLoading.value && _homeVM.characters.isEmpty;
           final loadingMore = _homeVM.isLoadingMore.value;
 
@@ -85,10 +84,10 @@ class _HomeViewState extends State<HomeView> {
             children: [
               CharactersHomeHeader(onInfoTap: _showInfoDialog),
               Expanded(
-                child: loadingFirst
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFFBB86FC),
+                child:
+                firstLoading ? const Center(
+                        child: CupertinoActivityIndicator(
+                          color: Colors.grey,
                         ),
                       )
                     : HomeCharactersScrollContent(

@@ -75,7 +75,7 @@ class CharacterUseCase implements CharacterRepository {
   }) async {
     final cached = await _appDatabase.getCharacters(pageNumber: page);
     if (cached.isEmpty) {
-      logger.e(cached.isEmpty);
+      logger.i(cached.isEmpty);
       return Failure<CharacterPageEntity>(failureMessage: fallbackMessage);
     }
     final hasMore =

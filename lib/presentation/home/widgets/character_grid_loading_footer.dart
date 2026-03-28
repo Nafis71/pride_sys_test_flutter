@@ -1,7 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Full-width loader shown below the grid while the next page loads.
 class CharacterGridLoadingFooter extends StatelessWidget {
   const CharacterGridLoadingFooter({super.key});
 
@@ -13,9 +13,8 @@ class CharacterGridLoadingFooter extends StatelessWidget {
         child: SizedBox(
           width: 28.w,
           height: 28.w,
-          child: const CircularProgressIndicator(
-            strokeWidth: 2.5,
-            color: Color(0xFFBB86FC),
+          child: CupertinoActivityIndicator(
+            color: Colors.grey,
           ),
         ),
       ),
